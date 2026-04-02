@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Photo Optimizer — Ecommerce Tool</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-inner">
+        <div class="logo">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="28" height="28" rx="8" fill="#6366f1"/>
+            <path d="M7 19L11 13L14.5 17L17 14L21 19H7Z" fill="white"/>
+            <circle cx="10" cy="10" r="2" fill="white"/>
+          </svg>
+          <span class="logo-text">PhotoOptimizer</span>
+        </div>
+        <span class="badge">Ecommerce Tool</span>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- LEFT: Upload + File list -->
+      <section class="panel panel-upload">
+        <div class="panel-title">
+          <span class="panel-icon">📁</span>
+          Carica immagini
+          <span class="file-count" id="fileCount">0 / 50</span>
+        </div>
+
+        <div class="dropzone" id="dropzone">
+          <div class="dropzone-inner" id="dropzoneInner">
+            <svg class="drop-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M24 8V32M24 8L16 16M24 8L32 16" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M8 36H40" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            <p class="drop-title">Trascina le foto qui</p>
+            <p class="drop-sub">oppure</p>
+            <label class="btn btn-outline" for="fileInput">Sfoglia file</label>
+            <input type="file" id="fileInput" accept="image/*" multiple hidden />
+            <p class="drop-hint">JPG, PNG, TIFF, HEIC — max 50 foto</p>
+          </div>
+        </div>
+
+        <ul class="file-list" id="fileList"></ul>
+
+        <div class="upload-actions" id="uploadActions" style="display:none">
+          <button class="btn btn-danger btn-sm" id="clearBtn">Rimuovi tutto</button>
+        </div>
+      </section>
+
+      <!-- RIGHT: Settings + Process -->
+      <section class="panel panel-settings">
+        <div class="panel-title">
+          <span class="panel-icon">⚙️</span>
+          Impostazioni
+        </div>
+
+        <!-- WebP Quality -->
+        <div class="setting-group">
+          <div class="setting-label">
+            <span>Qualità WebP</span>
+            <span class="setting-value" id="val-quality">85</span>
+          </div>
+          <input type="range" class="slider" id="webp_quality" min="60" max="100" value="85" />
+          <div class="slider-hints"><span>Più compresso</span><span>Lossless</span></div>
+        </div>
+
+        <!-- Divider -->
+        <div class="divider"><span>Ottimizzazione luce</span></div>
+
+        <!-- Toggles -->
+        <div class="toggles-grid">
+          <label class="toggle-card" id="card-autoEnhance">
+            <input type="checkbox" id="auto_enhance" />
+            <div class="toggle-card-body">
+              <span class="toggle-card-icon">✨</span>
+              <span class="toggle-card-label">Auto Enhance</span>
+              <span class="toggle-card-sub">CLAHE adattivo</span>
+            </div>
+            <div class="toggle-switch"></div>
+          </label>
+          <label class="toggle-card" id="card-whiteBalance">
+            <input type="checkbox" id="white_balance" />
+            <div class="toggle-card-body">
+              <span class="toggle-card-icon">🎨</span>
+              <span class="toggle-card-label">White Balance</span>
+              <span class="toggle-card-sub">Corregge dominanti</span>
+            </div>
+            <div class="toggle-switch"></div>
+          </label>
+          <label class="toggle-card" id="card-reduceReflections">
+            <input type="checkbox" id="reduce_reflections" />
+            <div class="toggle-card-body">
+              <span class="toggle-card-icon">💡</span>
+              <span class="toggle-card-label">Riduci Riflessi</span>
+              <span class="toggle-card-sub">Attenue le sovraesposizioni</span>
+            </div>
+            <div class="toggle-switch"></div>
+          </label>
+        </div>
+
+        <!-- Reflection strength (shown only when reduce_reflections is on) -->
+        <div class="setting-group" id="reflectionStrengthGroup" style="display:none">
+          <div class="setting-label">
+            <span>Intensità riduzione riflessi</span>
+            <span class="setting-value" id="val-reflection">50%</span>
+          </div>
+          <input type="range" class="slider" id="reflection_strength" min="0" max="100" value="50" />
+        </div>
+
+        <div class="divider"><span>Regolazioni manuali</span></div>
+
+        <!-- Sliders -->
+        <div class="setting-group">
+          <div class="setting-label">
+            <span>Luminosità</span>
+            <span class="setting-value" id="val-brightness">1.0</span>
+          </div>
+          <input type="range" class="slider" id="brightness" min="50" max="200" value="100" />
+        </div>
+
+        <div class="setting-group">
+          <div class="setting-label">
+            <span>Contrasto</span>
+            <span class="setting-value" id="val-contrast">1.0</span>
+          </div>
+          <input type="range" class="slider" id="contrast" min="50" max="200" value="100" />
+        </div>
+
+        <div class="setting-group">
+          <div class="setting-label">
+            <span>Saturazione</span>
+            <span class="setting-value" id="val-saturation">1.0</span>
+          </div>
+          <input type="range" class="slider" id="saturation" min="50" max="200" value="100" />
+        </div>
+
+        <div class="setting-group">
+          <div class="setting-label">
+            <span>Nitidezza</span>
+            <span class="setting-value" id="val-sharpness">1.0</span>
+          </div>
+          <input type="range" class="slider" id="sharpness" min="50" max="200" value="100" />
+        </div>
+
+        <!-- Reset -->
+        <button class="btn btn-ghost btn-sm" id="resetSettings">Ripristina valori</button>
+
+        <!-- Process button -->
+        <button class="btn btn-primary btn-lg" id="processBtn" disabled>
+          <span id="processBtnText">Elabora foto</span>
+        </button>
+
+        <!-- Progress -->
+        <div class="progress-wrap" id="progressWrap" style="display:none">
+          <div class="progress-info">
+            <span id="progressLabel">Elaborazione in corso...</span>
+            <span id="progressCount">0 / 0</span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="progressBar"></div>
+          </div>
+        </div>
+
+        <!-- Download -->
+        <div class="download-wrap" id="downloadWrap" style="display:none">
+          <div class="download-success">
+            <span class="success-icon">✅</span>
+            <div>
+              <p class="success-title">Foto elaborate con successo!</p>
+              <p class="success-sub" id="successSub"></p>
+            </div>
+          </div>
+          <a class="btn btn-success btn-lg" id="downloadBtn" href="#">
+            ⬇ Scarica ZIP
+          </a>
+          <button class="btn btn-ghost btn-sm" id="newBatchBtn">Nuova elaborazione</button>
+        </div>
+
+      </section>
+    </main>
+
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
